@@ -41,7 +41,8 @@ def init_auth_routes(app):
         print(f"File Name :  {file_name}")
         print(f"File Type :  {file_type}")
 
-        file_save_path = os.path.join(uploads_path, 'uploaded_image.'+file_type)
+        file_save_path = os.path.join(
+            uploads_path, 'uploaded_image.'+file_type)
 
         # save the file into the uploads folder
         file.save(file_save_path)
@@ -92,7 +93,6 @@ def init_auth_routes(app):
                 page_py = wiki_wiki.page(word_list[0])
                 print("Page - Exists: %s" % page_py.exists())
 
-            
         if not page_py.exists():
             word_list = value.split()
 
@@ -100,7 +100,7 @@ def init_auth_routes(app):
             if number_of_words > 1:
                 page_py = wiki_wiki.page(word_list[1])
                 print("Page - Exists: %s" % page_py.exists())
-        
+
         if not page_py.exists():
             return {'status': 'ok', 'payload': {'wiki_summary': ''}}, 200
 
@@ -112,16 +112,18 @@ def init_auth_routes(app):
         body = request.get_json()
         value = body['value']
 
-        url = 'https://www.google.com/search?q={0}&tbm=isch'.format(value)
-        content = requests.get(url).content
-        soup = BeautifulSoup(content, 'lxml')
-        images = soup.findAll('img')
+        try:
+            url = 'https://www.google.com/search?q={0}&tbm=isch'.format(value)
+            content = requests.get(url).content
+            soup = BeautifulSoup(content, 'lxml')
+            images = soup.findAll('img')
 
-        all_images = []
+            all_images = []
 
-        for image in images:
-            # print(image.get('src'))
-            all_images.append(image.get('src'))
-        # print(all_images)
-
-        return {'status': 'ok', 'payload': {'img_array': all_images}}, 200
+            for image in images:
+                all_images.append(image.get('src'))
+            # print(all_images)
+            return {'status': 'ok', 'payload': {'img_array': all_images}}, 200
+        except Exception as e:
+            print(e)
+            return {'status': 'fail', 'err': jsonify(e)}, 500

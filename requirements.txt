@@ -13,4 +13,4 @@ Wikipedia_API==0.5.4
 gunicorn==19.0.0
 uvicorn
 opencv-python-headless
-
+lxml
