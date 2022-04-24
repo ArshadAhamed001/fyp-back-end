@@ -1,2 +1,4 @@
 Flask
 flask_cors  # need when gets cors erros
+Wikipedia-API==0.5.4
+icrawler
