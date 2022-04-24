@@ -2,3 +2,9 @@ Flask
 flask_cors  # need when gets cors erros
 Wikipedia-API==0.5.4
 icrawler
+opencv-python
+tensorflow==2.8.0
+tensorflow-hub==0.11.0
+tensorflow-io-gcs-filesystem==0.25.0
+numpy
+bs4

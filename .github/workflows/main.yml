@@ -1,0 +1,24 @@
+
+name: Deploy # Name of the workflow
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Deploying to Heroku
+        # More details available at:
+        # https://github.com/akhileshns/heroku-deploy
+        uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: "496b1d62-50d5-4928-92de-8f4bdf934d02"
+          heroku_app_name: "gem-world-fyp-api"
+          heroku_email: "mashoor.2019420@iit.ac.lk"
+          healthcheck: "https://gem-world-fyp-api.herokuapp.com/health"
+          rollbackonhealthcheckfailed: true
