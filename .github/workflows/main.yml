@@ -17,8 +17,8 @@ jobs:
         # https://github.com/akhileshns/heroku-deploy
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
-          heroku_api_key: "496b1d62-50d5-4928-92de-8f4bdf934d02"
+          heroku_api_key: "f8ee1c3a-ff6b-4520-87a9-1db770ae9829"
           heroku_app_name: "gem-world-fyp-api"
-          heroku_email: "mashoor.2019420@iit.ac.lk"
+          heroku_email: "arshadahamedakram@gmail.com"
           healthcheck: "https://gem-world-fyp-api.herokuapp.com/health"
           rollbackonhealthcheckfailed: true
