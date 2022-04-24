@@ -20,5 +20,5 @@ jobs:
           heroku_api_key: "f8ee1c3a-ff6b-4520-87a9-1db770ae9829"
           heroku_app_name: "gem-world-fyp-api"
           heroku_email: "arshadahamedakram@gmail.com"
-          healthcheck: "https://gem-world-fyp-api.herokuapp.com/health"
-          rollbackonhealthcheckfailed: true
+          # healthcheck: "https://gem-world-fyp-api.herokuapp.com/health"
+          # rollbackonhealthcheckfailed: true
