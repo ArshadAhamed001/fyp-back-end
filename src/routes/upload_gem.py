@@ -5,12 +5,15 @@ import json
 import requests
 import numpy as np
 import tensorflow as tf
-
+import time
 from flask import Flask, request, jsonify
 from random import randint
 from bs4 import BeautifulSoup
 from tensorflow import keras
-
+import random
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+import random
+import PIL
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 # assume you have created a uploads folder
@@ -42,34 +45,101 @@ def init_auth_routes(app):
         print(f"File Type :  {file_type}")
 
         file_save_path = os.path.join(
-            uploads_path, 'uploaded_image.'+file_type)
+            uploads_path+"/Ruby", 'uploaded_image.' + file_type)
 
         # save the file into the uploads folder
         file.save(file_save_path)
 
-        CLASSES = ['Aventurine Green', 'Aquamarine', 'Amazonite', 'Andalusite', 'Andradite', 'Almandine', 'Alexandrite', 'Ametrine', 'Amethyst', 'Amber', 'Blue Lace Agate', 'Chalcedony Blue', 'Cats Eye', 'Beryl Golden', 'Bixbite', 'Bloodstone', 'Aventurine Yellow', 'Benitoite', 'Chalcedony', 'Carnelian', 'Chrome Diopside', 'Diamond', 'Coral', 'Chrysoberyl', 'Dumortierite', 'Danburite', 'Chrysocolla', 'Citrine', 'Chrysoprase', 'Diaspore', 'Emerald', 'Fluorite', 'Jasper', 'Iolite', 'Goshenite', 'Garnet Red', 'Jade', 'Hiddenite', 'Hessonite', 'Grossular', 'Onyx Black', 'Kyanite', 'Morganite',
-                   'Moonstone', 'Larimar', 'Onyx Green', 'Labradorite', 'Kunzite', 'Malachite', 'Lapis Lazuli', 'Prehnite', 'Pyrope', 'Quartz Rose', 'Opal', 'Pearl', 'Peridot', 'Onyx Red', 'Pyrite', 'Quartz Lemon', 'Quartz Beer', 'Rhodonite', 'Rhodolite', 'Sapphire Pink', 'Sapphire Blue', 'Sapphire Yellow', 'Quartz Rutilated', 'Rhodochrosite', 'Ruby', 'Sapphire Purple', 'Quartz Smoky', 'Sodalite', 'Scapolite', 'Tigers Eye', 'Serpentine', 'Sphene', 'Sunstone', 'Spinel', 'Spodumene', 'Tanzanite', 'Spessartite', 'Topaz', 'Tourmaline', 'Zoisite', 'Variscite', 'Zircon', 'Turquoise', 'Tsavorite']
+        CLASSES = ['Alexandrite', 'Amazonite', 'Amber', 'Amethyst', 'Ametrine', 'Andalusite', 'Aquamarine',
+                   'Aventurine Green', 'Aventurine Yellow', 'Benitoite', 'Bixbite', 'Bloodstone', 'Blue Lace Agate',
+                   'Carnelian', 'Cats Eye', 'Chalcedony', 'Chalcedony Blue', 'Chrome Diopside', 'Chrysocolla',
+                   'Chrysoprase', 'Citrine', 'Coral', 'Danburite', 'Diamond', 'Emerald', 'Fluorite', 'Garnet Red',
+                   'Goshenite', 'Hessonite', 'Hiddenite', 'Iolite', 'Jade', 'Jasper', 'Kunzite', 'Kyanite',
+                   'Labradorite', 'Lapis Lazuli', 'Larimar', 'Malachite', 'Moonstone', 'Morganite', 'Onyx Black',
+                   'Onyx Green', 'Onyx Red', 'Opal', 'Pearl', 'Peridot', 'Prehnite', 'Pyrite', 'Quartz Beer',
+                   'Quartz Lemon', 'Quartz Rose', 'Quartz Rutilated', 'Quartz Smoky', 'Rhodochrosite', 'Rhodolite',
+                   'Rhodonite', 'Ruby', 'Sapphire Blue', 'Sapphire Pink', 'Sapphire Purple', 'Scapolite', 'Serpentine',
+                   'Sodalite', 'Sphene', 'Spinel', 'Spodumene', 'Sunstone', 'Tanzanite', 'Tigers Eye', 'Topaz',
+                   'Tourmaline', 'Tsavorite', 'Turquoise', 'Variscite', 'Zircon', 'Zoisite']
 
-        model_path = os.path.join(content_path, 'predicted_model.h5')
+        model_path = os.path.join(basedir, 'gemstone_model_250')
         print(model_path)
 
         model = keras.models.load_model(model_path)
 
-        image_path = file_save_path
+        image_path = r'C:\Users\Acer\Downloads\fyp-back-end\src\uploads'
+        print(image_path)
+        time.sleep(5)
 
-        # print(image_path)
-        new_image = cv2.imread(image_path)
+        datagen_kwargs_augment = dict(
+            rotation_range=2,
+            width_shift_range=0.05,
+            height_shift_range=0.05,
+            shear_range=1,
+            # fill_mode = "nearest",
+            horizontal_flip=True,
+            vertical_flip=True,
+            rescale=1 / 255,
+            validation_split=0.10,
+        )
 
-        image = cv2.resize(new_image, (128, 128))
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-        image = tf.image.resize(image, size=[128, 128])
-        image = tf.reshape(image, [1, 128, 128, 3])
-        predict_x = model.predict(image)
-        classes_x = np.argmax(predict_x, axis=1)
 
-        print(CLASSES[classes_x[0]])
+        datagen_kwargs_default = dict(rescale=1 / 255)
 
-        return {'status': 'ok', 'payload': {'predicted_value': CLASSES[classes_x[0]] or 'Alexandrite'}}, 200
+        target_resolution = (256, 256)
+        random_seed = random.randrange(0, 10000, 1)
+        # random_seed = 1369
+        gemstones_folder = uploads_path
+
+        training_datagen = ImageDataGenerator(**datagen_kwargs_augment)
+        training_generator = training_datagen.flow_from_directory(
+            image_path,
+            target_size=target_resolution,
+            color_mode="rgb",
+            shuffle=random_seed,
+            seed=1369,
+            subset="training",
+            batch_size=12
+        )
+
+        validation_datagen = ImageDataGenerator(**datagen_kwargs_augment)
+        validation_generator = validation_datagen.flow_from_directory(
+            image_path,
+            target_size=target_resolution,
+            color_mode="rgb",
+            shuffle=True,
+            seed=random_seed,
+            subset="validation",
+            batch_size=12
+        )
+
+        test_datagen = ImageDataGenerator(**datagen_kwargs_default)
+        test_generator = training_datagen.flow_from_directory(
+            image_path,
+            target_size=target_resolution,
+            color_mode="rgb",
+            shuffle=False,
+            subset="validation",
+            batch_size=12,
+        )
+
+        full_datagen = ImageDataGenerator(**datagen_kwargs_default)
+        full_generator = training_datagen.flow_from_directory(
+            image_path,
+            target_size=target_resolution,
+            color_mode="rgb",
+            shuffle=False,
+            batch_size=12,
+        )
+        predictions = model.predict(full_generator)
+        predictions = np.argmax(predictions, axis=1)
+        #print(full_generator.classes)
+        print(predictions)
+
+        print(CLASSES[predictions[0]])
+
+        return {'status': 'ok', 'payload': {'predicted_value': CLASSES[predictions[0]]}}, 200
+
 
     @app.route('/wiki-summary', methods=['POST'])
     def wikipedia_summary():
@@ -106,6 +176,7 @@ def init_auth_routes(app):
 
         # print(page_py)
         return {'status': 'ok', 'payload': {'wiki_summary': page_py.summary[0:200]}}, 200
+
 
     @app.route('/similar-images', methods=['POST'])
     def similar_images():

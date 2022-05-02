@@ -8,12 +8,12 @@ app = Flask(__name__)
 CORS(app)
 
 
-@ app.route('/', methods=['GET'])
+@app.route('/', methods=['GET'])
 def hello_world():
     return ('hello world'), 200
 
 
-@ app.route('/health', methods=['GET'])
+@app.route('/health', methods=['GET'])
 def test():
     return ('Healthy'), 200
 
