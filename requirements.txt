@@ -12,5 +12,6 @@ tensorflow-cpu==2.8.0
 Wikipedia_API==0.5.4
 gunicorn==19.0.0
 uvicorn
-opencv-python
+# opencv-python
+opencv-python-headless
 lxml
