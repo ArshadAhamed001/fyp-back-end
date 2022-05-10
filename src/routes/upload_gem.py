@@ -67,7 +67,7 @@ def init_auth_routes(app):
 
         model = keras.models.load_model(model_path)
 
-        image_path = r'C:\Users\Acer\Downloads\fyp-back-end\src\uploads'
+        image_path = uploads_path
         print(image_path)
         time.sleep(5)
 
@@ -82,7 +82,6 @@ def init_auth_routes(app):
             rescale=1 / 255,
             validation_split=0.10,
         )
-
 
         datagen_kwargs_default = dict(rescale=1 / 255)
 
@@ -133,13 +132,12 @@ def init_auth_routes(app):
         )
         predictions = model.predict(full_generator)
         predictions = np.argmax(predictions, axis=1)
-        #print(full_generator.classes)
+        # print(full_generator.classes)
         print(predictions)
 
         print(CLASSES[predictions[0]])
 
         return {'status': 'ok', 'payload': {'predicted_value': CLASSES[predictions[0]]}}, 200
-
 
     @app.route('/wiki-summary', methods=['POST'])
     def wikipedia_summary():
@@ -176,7 +174,6 @@ def init_auth_routes(app):
 
         # print(page_py)
         return {'status': 'ok', 'payload': {'wiki_summary': page_py.summary[0:200]}}, 200
-
 
     @app.route('/similar-images', methods=['POST'])
     def similar_images():
