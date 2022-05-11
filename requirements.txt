@@ -15,3 +15,4 @@ uvicorn
 # opencv-python
 opencv-python-headless
 lxml
+Pillow
